@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- TABELAS ---
+
+model User {
+  // @db.Uuid diz ao Postgres para usar o tipo nativo UUID (mais eficiente)
+  id        String   @id @db.Uuid
+  name      String
+  email     String   @unique
+  password  String   
+  createdAt DateTime @default(now())
+
+  sensors   Sensor[]
+
+  @@map("users")
+}
+
+model Sensor {
+  id        String   @id @db.Uuid
+  name      String
+  lat       Float
+  lon       Float
+  active    Boolean  @default(true)
+  
+  userId    String   @db.Uuid // A chave estrangeira também tem que ser UUID
+  user      User     @relation(fields: [userId], references: [id])
+
+  readings  SensorReading[]
+
+  @@map("sensors")
+}
+
+model SensorReading {
+  id        String   @id @db.Uuid
+  value     Float
+  type      String   // 'temperature', 'rain'
+  readAt    DateTime @default(now())
+
+  sensorId  String   @db.Uuid // UUID aqui também
+  sensor    Sensor   @relation(fields: [sensorId], references: [id])
+
+  @@map("sensor_readings")
+}

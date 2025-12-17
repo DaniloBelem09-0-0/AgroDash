@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    // 1. Estrutura de Pastas (Descomentei para organizar)
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    // 2. Configuração de Módulos (Moderno)
+    "module": "nodenext",
+    "target": "esnext",
+    
+    // 3. A CORREÇÃO PRINCIPAL ESTÁ AQUI:
+    // Dizemos ao TS para carregar os tipos globais do Node.js
+    "types": ["node"],
+
+    // 4. Configurações de Saída
+    "sourceMap": true,
+    "declaration": true,
+    
+    // 5. Verificações de Tipagem
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    
+    // 6. Compatibilidade
+    "esModuleInterop": true,
+    
+    // Se você tiver erros de importação chatos, mude isso para false
+    "verbatimModuleSyntax": false 
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
