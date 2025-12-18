@@ -1,41 +1,35 @@
-import { Request, Response } from 'express'; // Assumindo Express
+import { Request, Response } from 'express';
 import { UserRepositoryInterface } from '../../domain/repositories/UserRepositoryInterface.js';
 import { User } from '../../domain/entities/User.js';
+import { UserUseCase } from '../../application/use-cases/UserUseCase.js';
 
 export class UserController {
-    
-    // Injeção de dependência via construtor
-    constructor(private userRepository: UserRepositoryInterface) {
-        this.userRepository = userRepository;
+    constructor(private userUseCase: UserUseCase) {
+        this.userUseCase = userUseCase;
     }
 
-    // Criar Usuário
     async create(req: Request, res: Response): Promise<void> {
         try {
             const { name, email, password } = req.body;
 
-            // Cria a entidade (Regra de Negócio: O ID é gerado aqui se não passado)
             const user = User.create(name, email, undefined, password);
 
-            await this.userRepository.save(user);
+            await this.userUseCase.create(user);
 
-            // Retorna apenas o necessário (evita retornar a senha, por exemplo)
             res.status(201).json({
                 id: user.id,
                 name: user.name,
                 email: user.email
             });
         } catch (error: any) {
-            // Tratamento básico de erro (ex: email duplicado)
             res.status(400).json({ error: error.message || 'Unexpected error' });
         }
     }
 
-    // Buscar por Email
     async findByEmail(req: Request, res: Response): Promise<void> {
         try {
             const { email } = req.params;
-            const user = await this.userRepository.findByEmail(email!);
+            const user = await this.userUseCase.findByEmail(email!);
 
             if (!user) {
                 res.status(404).json({ message: 'User not found' });
@@ -48,7 +42,6 @@ export class UserController {
         }
     }
 
-    // Listar todos
     async findAll(req: Request, res: Response): Promise<void> {
         try {
             const users = await this.userRepository.findAll();

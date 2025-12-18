@@ -10,9 +10,6 @@ export class SensorReadingController {
         try {
             const { sensorId, value, type, timestamp } = req.body;
 
-            // ATENÇÃO: Respeitando a ordem do seu construtor:
-            // (id, sensorId, value, type, timestamp)
-            // Passamos 'undefined' no ID para que a classe gere o UUID
             const reading = new SensorReading(
                 undefined, 
                 sensorId, 
