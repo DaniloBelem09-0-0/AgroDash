@@ -18,6 +18,7 @@ import { SensorReadingController } from "../adapters/controllers/SensorReadingCo
 import { AuthController } from "../adapters/controllers/AuthController.js";
 
 import { authMiddleware } from "../infrastructure/providers/AuthMiddleware.js";
+import { RabbitMQService } from "../infrastructure/messaging/RabbitMQService.js";
 
 const app = express();
 app.use(express.json());
@@ -67,7 +68,10 @@ const userController = new UserController(createUserUseCase);
 
 const virtualSensorRepository = new PostgresSensorRepository();
 const readingSensorRepository = new PostgresSensorReadingRepository();
-const createSensorUseCase = new CreateSensorUseCase(virtualSensorRepository);
+
+const mqService = new RabbitMQService("amqp://localhost");
+
+const createSensorUseCase = new CreateSensorUseCase(virtualSensorRepository, mqService);
 const sensorController = new VirtualSensorController(createSensorUseCase);
 
 // [OBSERVAÇÃO] Aqui você está passando o Repositório direto. 

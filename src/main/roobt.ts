@@ -17,7 +17,7 @@ const syncUseCase = new SyncWeatherUseCase(readingRepo, weatherProvider);
 
 console.log("🤖 Robô Agrícola Iniciado! Aguardando agendamento...");
 
-cron.schedule('*/60 * * * * *', async () => {
+cron.schedule('*/6 * * * * *', async () => {
     console.log("\n⏰ Iniciando ciclo de coleta de dados...");
 
     try {
