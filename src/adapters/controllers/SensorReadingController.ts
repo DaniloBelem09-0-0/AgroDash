@@ -8,14 +8,14 @@ export class SensorReadingController {
 
     async receiveReading(req: Request, res: Response): Promise<void> {
         try {
-            const { sensorId, value, type, timestamp } = req.body;
+            const { sensorId, value, type, createdAt } = req.body;
 
             const reading = new SensorReading(
                 undefined, 
                 sensorId, 
                 value, 
                 type, 
-                timestamp ? new Date(timestamp) : undefined
+                createdAt ? new Date(createdAt) : undefined
             );
 
             await this.sensorRepository.save(reading);

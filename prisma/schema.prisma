@@ -7,14 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// --- TABELAS ---
-
 model User {
   // @db.Uuid diz ao Postgres para usar o tipo nativo UUID (mais eficiente)
   id        String   @id @db.Uuid
   name      String
   email     String   @unique
-  password  String   
+  password  String 
+  role      String   @default("producer")  
   createdAt DateTime @default(now())
 
   sensors   Sensor[]

@@ -1,4 +1,5 @@
-import { randomUUID } from "node:crypto";
+import { randomUUID, UUID } from "node:crypto";
+import { v4 as uuidv4 } from 'uuid';
 
 export class VirtualSensor {
   public readonly id: string;
@@ -13,7 +14,7 @@ export class VirtualSensor {
     lat: number, 
     lon: number, 
     userId: string, 
-    id?: string,
+    id: string | null | undefined = null,
     active: boolean = true
   ) {
     this.name = name;
@@ -21,6 +22,6 @@ export class VirtualSensor {
     this.lon = lon;
     this.userId = userId;
     this.active = active;
-    this.id = id || randomUUID();
+    this.id = id || uuidv4();
   }
 }

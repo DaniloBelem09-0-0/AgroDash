@@ -10,7 +10,8 @@ export class PostgresSensorReadingRepository implements sensorReadingRepositoryI
             take: limit
         });
 
-        return readings.map((r: { id: string; value: number; type: string; timestamp: Date; sensorId: string; }) => new SensorReading(r.id, r.sensorId, r.value, r.type as "temperature" | "humidity" | "rain", r.timestamp));
+        return readings.map((r: { id: string; value: number; type: string; readAt: Date; sensorId: string; }) =>
+            new SensorReading(r.id, r.sensorId, r.value, r.type as "temperature" | "humidity" | "rain", r.readAt));
     }
 
     async save(reading: SensorReading): Promise<void> {
@@ -20,7 +21,7 @@ export class PostgresSensorReadingRepository implements sensorReadingRepositoryI
                 sensorId: reading.sensorId,
                 value: reading.value,
                 type: reading.type,
-                timestamp: reading.timestamp
+                readAt: reading.readAt
             }
         });
     }

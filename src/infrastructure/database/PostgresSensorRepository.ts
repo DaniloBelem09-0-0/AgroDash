@@ -5,7 +5,8 @@ import { SensorRepositoryInterface } from "../../domain/repositories/SensorRepos
 export class PostgresSensorRepository implements SensorRepositoryInterface {
     
     async save(sensor: VirtualSensor): Promise<void> {
-        await prisma.virtualSensor.create({
+        console.log('Saving sensor to database...', sensor.id);
+        await prisma.sensor.create({
             data: {
                 id: sensor.id,
                 name: sensor.name,
@@ -18,16 +19,22 @@ export class PostgresSensorRepository implements SensorRepositoryInterface {
     }
 
     async listBySensor(sensorId: string): Promise<VirtualSensor[]> {
-        const sensors = await prisma.virtualSensor.findMany({
+        const sensors = await prisma.sensor.findMany({
             where: { id: sensorId }
         });
 
-        return sensors.map((s: { name: string; lat: number; lon: number; userId: string; id: string | undefined; active: boolean | undefined; }) => new VirtualSensor(s.name, s.lat, s.lon, s.userId, s.id, s.active));
+        return sensors.map((s: { name: string; lat: number; lon: number; userId: string; id: string | undefined; active: boolean | undefined; }) => new VirtualSensor(s.name, s.lat, s.lon, s.userId, s.id as `${string}-${string}-${string}-${string}-${string}` | undefined, s.active));
     }
 
     async delete(sensorId: string): Promise<void> {
-        await prisma.virtualSensor.delete({
+        await prisma.sensor.delete({
             where: { id: sensorId }
         });
+    }
+
+    async list(): Promise<VirtualSensor[]> {
+        const sensors = await prisma.sensor.findMany();
+
+        return sensors.map((s: { name: string; lat: number; lon: number; userId: string; id: string | undefined; active: boolean | undefined; }) => new VirtualSensor(s.name, s.lat, s.lon, s.userId, s.id as `${string}-${string}-${string}-${string}-${string}` | undefined, s.active));
     }
 }

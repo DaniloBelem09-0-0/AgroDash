@@ -5,17 +5,14 @@ export class CreateSensorUseCase {
 
     constructor(private sensorRepository: SensorRepositoryInterface) {}
 
-    public async execute(name: string, lat: number, lon: number, userId: string, id?: string, active: boolean = true) {
-        /**
-         * name: string, 
-         * lat: number,
-         * lon: number,
-         * userId: string,
-         * id?: string,
-         * active: boolean = true
-         */
-        let virtualSensor = new VirtualSensor(name,lat, lon, userId, id, active );
-        const sensor = await this.sensorRepository.save(virtualSensor);
-        return sensor;
+    public async execute(reading: VirtualSensor): Promise<VirtualSensor> {
+        try{
+            console.log('Creating sensor...');
+            await this.sensorRepository.save(reading);
+            return reading;
+        } catch (error) {
+            throw new Error('Failed to create sensor');
+        }
     }
 }
+

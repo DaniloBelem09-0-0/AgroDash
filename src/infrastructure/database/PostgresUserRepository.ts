@@ -1,6 +1,7 @@
 import { prisma } from "./prismaClient.js";
 import { User } from "../../domain/entities/User.js";
 import { UserRepositoryInterface } from "../../domain/repositories/UserRepositoryInterface.js";
+import { UserRole } from "../../domain/enums/UserRole.js";
 
 export class PostgresUserRepository implements UserRepositoryInterface {
     
@@ -10,7 +11,8 @@ export class PostgresUserRepository implements UserRepositoryInterface {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                password: user.password 
+                password: user.password ?? "",
+                role: user.role
             }
         });
     }
@@ -26,7 +28,8 @@ export class PostgresUserRepository implements UserRepositoryInterface {
             dbUser.name,
             dbUser.email,
             dbUser.id,
-            dbUser.password
+            dbUser.password,
+            dbUser.role as UserRole
         );
     }
 
@@ -41,18 +44,20 @@ export class PostgresUserRepository implements UserRepositoryInterface {
             dbUser.name,
             dbUser.email,
             dbUser.id,
-            dbUser.password
+            dbUser.password,
+            dbUser.role as UserRole
         );
     }
     
     async findAll(): Promise<User[]> {
         const dbUsers = await prisma.user.findMany();
-        return dbUsers.map((dbUser: User) => 
+        return dbUsers.map((dbUser) =>
             User.create(
                 dbUser.name,
                 dbUser.email,
                 dbUser.id,
-                dbUser.password!
+                dbUser.password ?? undefined,
+                dbUser.role as UserRole
             )
         );
     }
@@ -63,7 +68,7 @@ export class PostgresUserRepository implements UserRepositoryInterface {
             data: {
                 name: user.name,
                 email: user.email,
-                password: user.password
+                password: user.password ?? undefined
             }
         });
     }
@@ -75,13 +80,3 @@ export class PostgresUserRepository implements UserRepositoryInterface {
     }
 
 }
-
-/**
- * save(user: import("../entities/User.js").User): Promise<void>;
- * findById(id: string): Promise<import("../entities/User.js").User | null>;
- * findByEmail(email: string): Promise<import("../entities/User.js").User | null>;
- * findAll(): Promise<import("../entities/User.js").User[]>;
- * update(user: import("../entities/User.js").User): Promise<void>;
- * delete(id: string): Promise<void>;
- */
-    
