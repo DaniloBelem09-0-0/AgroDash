@@ -1,3 +1,3 @@
 # AgroDash
 
-npx prisma migrate dev --name init
+Agro dash é o core de um projeto com microsservice
