@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { PostgresSensorReadingRepository } from '../../infrastructure/database/PostgresSensorReadingRepository.js';
+import { RedisCacheServiceInterface } from '../../application/use-cases/RedisCacheServiceInterface.js';
 
 export class SensorReadingController {
-    constructor(private sensorReadingRepository: PostgresSensorReadingRepository) {}
+    constructor(private sensorReadingRepository: PostgresSensorReadingRepository, private cacheService: RedisCacheServiceInterface) {}
 
     async getHistory(req: Request, res: Response) {
         try {
