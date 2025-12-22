@@ -1,3 +1,4 @@
+/*
 import cron from 'node-cron';
 
 // 1. Repositórios e Providers Reais
@@ -17,7 +18,7 @@ const syncUseCase = new SyncWeatherUseCase(readingRepo, weatherProvider);
 
 console.log("🤖 Robô Agrícola Iniciado! Aguardando agendamento...");
 
-cron.schedule('*/6 * * * * *', async () => {
+cron.schedule('/6 * * * * *', async () => {
     console.log("\n⏰ Iniciando ciclo de coleta de dados...");
 
     try {
@@ -35,3 +36,4 @@ cron.schedule('*/6 * * * * *', async () => {
         console.error("❌ Erro no ciclo do Robô:", error);
     }
 });
+*/

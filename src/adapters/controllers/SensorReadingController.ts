@@ -1,42 +1,34 @@
 import { Request, Response } from 'express';
-import { sensorReadingRepositoryInterface } from '../../domain/repositories/SensorReadingRepositoryInterface.js';
-import { SensorReading } from '../../domain/entities/SensorReading.js';
+import { PostgresSensorReadingRepository } from '../../infrastructure/database/PostgresSensorReadingRepository.js';
 
 export class SensorReadingController {
+    constructor(private sensorReadingRepository: PostgresSensorReadingRepository) {}
 
-    constructor(private sensorRepository: sensorReadingRepositoryInterface) {}
-
-    async receiveReading(req: Request, res: Response): Promise<void> {
+    async getHistory(req: Request, res: Response) {
         try {
-            const { sensorId, value, type, createdAt } = req.body;
+            const { sensorId, limit } = req.query;
 
-            const reading = new SensorReading(
-                undefined, 
-                sensorId, 
-                value, 
-                type, 
-                createdAt ? new Date(createdAt) : undefined
+            if (!sensorId) {
+                return res.status(400).json({ 
+                    error: "O parâmetro 'sensorId' é obrigatório na query string.",
+                    example: "/sensors?sensorId=seu-uuid-aqui" 
+                });
+            }
+
+            const parsedLimit = limit ? parseInt(limit as string) : 50;
+
+            console.log(`[Histórico] Procurando leituras para o sensor: ${sensorId} (Limite: ${parsedLimit})`);
+
+            const readings = await this.sensorReadingRepository.listBySensor(
+                sensorId as string, 
+                parsedLimit
             );
 
-            await this.sensorRepository.save(reading);
+            return res.status(200).json(readings);
 
-            res.status(201).json({ message: 'Reading saved', id: reading.id });
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: 'Failed to save reading' });
-        }
-    }
-
-    async getHistory(req: Request, res: Response): Promise<void> {
-        try {
-            const { sensorId } = req.params;
-            const limit = req.query.limit ? Number(req.query.limit) : 10;
-
-            const readings = await this.sensorRepository.listBySensor(sensorId!, limit);
-
-            res.status(200).json(readings);
-        } catch (error) {
-            res.status(500).json({ error: 'Failed to fetch history' });
+        } catch (error: any) {
+            console.error("Erro no GetHistory:", error);
+            return res.status(500).json({ error: "Erro interno ao buscar histórico." });
         }
     }
 }

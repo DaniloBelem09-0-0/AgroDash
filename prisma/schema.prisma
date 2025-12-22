@@ -37,12 +37,11 @@ model Sensor {
 }
 
 model SensorReading {
-  id        String   @id @db.Uuid
+  id        String   @id @default(uuid())
   value     Float
-  type      String   // 'temperature', 'rain'
+  type      String
   readAt    DateTime @default(now())
-
-  sensorId  String   @db.Uuid // UUID aqui também
+  sensorId  String
   sensor    Sensor   @relation(fields: [sensorId], references: [id])
 
   @@map("sensor_readings")

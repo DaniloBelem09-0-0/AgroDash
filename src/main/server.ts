@@ -24,7 +24,6 @@ const app = express();
 app.use(express.json());
 app.use(cors()); // [CORREÇÃO] Habilita acesso de outros domínios/portas
 
-// ... (Configurações do Swagger mantidas iguais) ...
 const swaggerOptions = {
     definition: {
         openapi: "3.0.0",
@@ -60,7 +59,6 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// --- INJEÇÃO DE DEPENDÊNCIA ---
 
 const userRepository = new PostgresUserRepository();
 const createUserUseCase = new UserUseCase(userRepository);
@@ -74,8 +72,6 @@ const mqService = new RabbitMQService("amqp://localhost");
 const createSensorUseCase = new CreateSensorUseCase(virtualSensorRepository, mqService);
 const sensorController = new VirtualSensorController(createSensorUseCase);
 
-// [OBSERVAÇÃO] Aqui você está passando o Repositório direto. 
-// O ideal seria: new GetReadingHistoryUseCase(readingSensorRepository)
 const sensorReadingController = new SensorReadingController(readingSensorRepository);
 
 const authenticateUserUseCase = new AuthenticateUserUseCase(userRepository);
@@ -200,7 +196,6 @@ app.post("/users", (req, res) => {
     return userController.create(req, res);
 });
 
-// [CORREÇÃO CRÍTICA] authMiddleware deve vir ANTES de checkRole
 
 /**
  * @swagger
@@ -297,8 +292,7 @@ app.get("/sensors", authMiddleware, checkRole(['admin', 'producer']), (req, res)
     return sensorReadingController.getHistory(req, res);
 });
 
-// --- INICIALIZAÇÃO ---
-const PORT = process.env.PORT || 3333; // Boa prática: usar variável de ambiente
+const PORT = process.env.PORT || 3333; 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
     console.log(`📄 Swagger docs available at http://localhost:${PORT}/api-docs`);
