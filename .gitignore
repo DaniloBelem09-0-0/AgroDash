@@ -1,0 +1,51 @@
+Ambientes / Segredos
+
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+Node.js
+
+node_modules/
+dist/
+build/
+.npm
+*.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+Go
+
+Binários e ficheiros executáveis
+
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+Ficheiro principal se compilado
+
+main
+
+Dependências
+
+vendor/
+
+IDEs e Editores
+
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+Prisma
+
+/prisma/migrations/
