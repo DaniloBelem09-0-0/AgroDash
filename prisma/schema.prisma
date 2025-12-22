@@ -12,8 +12,8 @@ model User {
   id        String   @id @db.Uuid
   name      String
   email     String   @unique
-  password  String 
-  role      String   @default("producer")  
+  password  String
+  role      String   @default("producer")
   createdAt DateTime @default(now())
 
   sensors   Sensor[]
@@ -37,11 +37,15 @@ model Sensor {
 }
 
 model SensorReading {
-  id        String   @id @default(uuid())
+  // CORREÇÃO: Adicionado @db.Uuid para garantir compatibilidade com o tipo nativo
+  id        String   @id @default(uuid()) @db.Uuid
   value     Float
   type      String
   readAt    DateTime @default(now())
-  sensorId  String
+  
+  // CORREÇÃO: Adicionado @db.Uuid aqui também. 
+  // Sem isso, o Prisma cria como 'text' e o banco rejeita a FK com 'Sensor.id' (que é uuid)
+  sensorId  String   @db.Uuid
   sensor    Sensor   @relation(fields: [sensorId], references: [id])
 
   @@map("sensor_readings")

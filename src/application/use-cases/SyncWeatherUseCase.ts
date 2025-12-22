@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import { SensorReading } from "../../domain/entities/SensorReading.js";
 import { WeatherProviderInterface } from "../../domain/providers/WeatherProviderInterface.js";
 import { sensorReadingRepositoryInterface } from "../../domain/repositories/SensorReadingRepositoryInterface.js";
@@ -8,7 +9,7 @@ export class SyncWeatherUseCase {
         private weatherProvider: WeatherProviderInterface
     ) {}
 
-    async execute(lat: number, lon: number, sensorId: string) {
+    async execute(lat: number, lon: number, sensorId: UUID) {
         const data = await this.weatherProvider.getCurrentWeather(lat, lon);
 
         const readingTemp = new SensorReading(
