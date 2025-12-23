@@ -1,8 +1,5 @@
 import { Redis } from 'ioredis';
 
-/**
- * Interface para o serviço de cache baseado em Redis.
- */
 export interface RedisCacheServiceInterface {
     /**
      * Tenta recuperar um valor do cache.

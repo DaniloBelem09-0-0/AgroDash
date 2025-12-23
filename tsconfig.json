@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
     "outDir": "./dist",
     "module": "nodenext",
     "target": "esnext",
     
-    "types": ["node"], // Isso corrige erros como 'process' not found
+    "types": ["jest","node"], 
 
     "sourceMap": true,
     "declaration": true,
@@ -15,15 +14,17 @@
     "skipLibCheck": true,
     
     "esModuleInterop": true,
-    "verbatimModuleSyntax": false 
+    "verbatimModuleSyntax": false,
+    
+    // CORREÇÃO 1: Necessário quando se usa module: nodenext
+    "isolatedModules": true
   },
   
-  // --- ADICIONE ISTO AQUI PARA O NODEMON FUNCIONAR ---
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"
   },
   
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "jest.config.ts"],
   "exclude": ["node_modules", "dist"]
 }
